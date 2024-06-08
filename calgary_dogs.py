@@ -6,11 +6,12 @@
 # You must include the main listed below. You may add your own additional classes, functions, variables, etc. 
 # You may import any modules from the standard Python library.
 # Remember to include docstrings and comments.
-
+import pandas as pd
+import numpy as np
 def main():
 
     # Import data here
-
+    df = pd.read_excel('CalgaryDogBreeds.xlsx')
     print("ENSF 692 Dogs of Calgary")
 
     # User input stage
