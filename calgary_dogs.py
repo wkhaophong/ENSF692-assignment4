@@ -9,11 +9,17 @@
 import pandas as pd
 
 def analyze_data(data, breed):
-    # Filter data for the selected breed
-    breed_data = data[data['Breed'].str.upper() == breed]
-    #print(breed_data)  # Print the breed_data for debugging purposes
+    # Masking operation to filter data for the selected breed
+    breed_data = data[data.index.get_level_values('Breed').str.upper() == breed.upper()]
+    
+    # Grouping by Year
+    grouped_data = breed_data.groupby(level='Year')
 
-    years = breed_data['Year'].unique()
+    # Multi-index slicing
+    idx = pd.IndexSlice
+
+    # Find all years where the selected breed was listed in the top breeds
+    years = breed_data.index.get_level_values('Year').unique()
     years_str = " ".join(str(year) for year in years)
     print(f"The {breed.upper()} was found in the top breeds for years: {years_str}")
 
@@ -22,10 +28,11 @@ def analyze_data(data, breed):
     print(f"There have been {total_registrations} {breed} dogs registered total.")
 
     # Group by Year and calculate total registrations for each year
-    for year in years:
-        year_data = breed_data[breed_data['Year'] == year]
+    for year, year_data in grouped_data:
+        # Multi-index slicing to filter data for the current year
+        year_data = year_data.loc[idx[year, :], :]
         year_registrations = year_data['Total'].sum()
-        total_registrations_all_breeds = data[data['Year'] == year]['Total'].sum()
+        total_registrations_all_breeds = data.loc[idx[year, :], 'Total'].sum()
         percentage = (year_registrations / total_registrations_all_breeds) * 100
         print(f"The {breed} was {percentage:.6f}% of top breeds in {year}")
 
