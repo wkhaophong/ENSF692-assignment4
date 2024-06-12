@@ -36,7 +36,7 @@ def analyze_data(data, breed):
         percentage = (year_registrations / total_registrations_all_breeds) * 100
         print(f"The {breed} was {percentage:.6f}% of top breeds in {year}")
 
-     # Calculate percentage of registrations out of total across all years
+    # Calculate percentage of registrations out of total across all years
     total_registrations_all_years = data['Total'].sum()
     total_percentage = (total_registrations / total_registrations_all_years) * 100
     print(f"The {breed} was {total_percentage:.6f}% of top breeds across all years.")
@@ -51,6 +51,10 @@ def analyze_data(data, breed):
     popular_months.sort()
     print("Most popular month(s) for {} dogs: {}".format(breed, " ".join(popular_months)))
 
+def validate_input(data, breed_input):
+    if breed_input not in data.index.get_level_values('Breed'):
+        raise KeyError()
+    return breed_input
 
 def main():
     # Import data here
@@ -67,13 +71,11 @@ def main():
     while True:
         try:
             breed_input = input("Please enter a dog breed: ").strip().upper()
-            if breed_input not in data.index.get_level_values('Breed'):
-                raise KeyError("Dog breed not found in the data. Please try again.")
-        
+            breed_input = validate_input(data, breed_input)
             analyze_data(data, breed_input)
             break
-        except KeyError as e:
-            print(e)
+        except KeyError :
+            print("Dog breed not found in the data. Please try again.")
 
 if __name__ == '__main__':
     main()
