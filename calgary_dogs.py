@@ -41,7 +41,9 @@ def analyze_data(data, breed):
     max_counts = month_counts.max()
     #print(max_counts)
     popular_months = month_counts[month_counts == max_counts].index.tolist()
+    popular_months.sort()
     print("Most popular month(s) for {} dogs: {}".format(breed, " ".join(popular_months)))
+
 
 def main():
     # Import data here
