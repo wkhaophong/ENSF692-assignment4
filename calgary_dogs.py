@@ -53,15 +53,16 @@ def main():
     # Convert 'Breed' column to uppercase for consistency
     data["Breed"] = data["Breed"].str.upper()
 
+    # Set multi-index with Year and Breed
+    data.set_index(['Year', 'Breed'], inplace=True)
+
     # User input stage
     while True:
         try:
             breed_input = input("Please enter a dog breed: ").strip().upper()
-            if breed_input not in data['Breed'].values:
+            if breed_input not in data.index.get_level_values('Breed'):
                 raise KeyError("Dog breed not found in the data. Please try again.")
-            
-            # Fetch the proper case for the breed name for use in output
-            breed_input = data[data['Breed'] == breed_input].iloc[0]['Breed']
+        
             analyze_data(data, breed_input)
             break
         except KeyError as e:
