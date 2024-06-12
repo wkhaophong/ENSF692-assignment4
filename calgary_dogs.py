@@ -1,5 +1,5 @@
 # calgary_dogs.py
-# AUTHOR NAME
+# AUTHOR NAME: WARISA KHAOPHONG
 #
 # A terminal-based application for computing and printing statistics based on given input.
 # Detailed specifications are provided via the Assignment 4 README file.
@@ -9,6 +9,16 @@
 import pandas as pd
 
 def analyze_data(data, breed):
+    """
+    Analyzes the data for a specific dog breed and prints statistics.
+
+    Parameters:
+    data (DataFrame): The DataFrame containing dog registration data.
+    breed (str): The dog breed to analyze.
+
+    Returns:
+    None
+    """
     # Masking operation to filter data for the selected breed
     breed_data = data[data.index.get_level_values('Breed').str.upper() == breed.upper()]
     
@@ -34,7 +44,7 @@ def analyze_data(data, breed):
         year_registrations = year_data['Total'].sum()
         total_registrations_all_breeds = data.loc[idx[year, :], 'Total'].sum()
         percentage = (year_registrations / total_registrations_all_breeds) * 100
-        print(f"The {breed} was {percentage:.6f}% of top breeds in {year}")
+        print(f"The {breed} was {percentage:.6f}% of top breeds in {year}.")
 
     # Calculate percentage of registrations out of total across all years
     total_registrations_all_years = data['Total'].sum()
@@ -44,19 +54,30 @@ def analyze_data(data, breed):
     # Count the occurrences of each month for the selected breed
     month_counts = breed_data['Month'].value_counts()
 
-    # Find the maximum count
+    # Get the maximum count of registrations for any month
     max_counts = month_counts.max()
-    #print(max_counts)
+    # Filter months with counts equal to max_counts
     popular_months = month_counts[month_counts == max_counts].index.tolist()
     popular_months.sort()
     print("Most popular month(s) for {} dogs: {}".format(breed, " ".join(popular_months)))
 
 def validate_input(data, breed_input):
+    """
+    Validates the user input breed against the available breeds in the data.
+
+    Parameters:
+    data (DataFrame): The DataFrame containing dog registration data.
+    breed_input (str): The user-input dog breed.
+
+    Returns:
+    str: The validated dog breed.
+    """
     if breed_input not in data.index.get_level_values('Breed'):
         raise KeyError()
     return breed_input
 
 def main():
+
     # Import data here
     data = pd.read_excel('CalgaryDogBreeds.xlsx')
     print("ENSF 692 Dogs of Calgary")
